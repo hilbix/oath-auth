@@ -23,7 +23,7 @@ Verify OATH from shell level by calling `libpam-google-authenticator` PAM module
 
     Notes:
 
-    - The defaults are not parsed out out `$HOME/.google_authenticator` yet.
+    - The defaults are not parsed out of `$HOME/.google_authenticator` yet.
     - No other options of `$HOME/.google_authenticator` are supported
     - Emergency fallback tokens are not supported as well.
     - HOTP is not supported.
