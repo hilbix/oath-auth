@@ -178,6 +178,12 @@ fail:
   return ret;
 }
 
+static int
+issetarg(const char *s)
+{
+  return *s && strcmp(s, "-");
+}
+
 static struct google_auth_data	appdata;
 static struct pam_conv		pamconv = { conv, &appdata };
 static int 			(*fn)(pam_handle_t *pamh, int flags, int argc, const char **argv);
@@ -206,7 +212,7 @@ run(const char *pw, int argc, const char **argv)
     case PAM_USER_UNKNOWN:		OOPS("PAM_USER_UNKNOWN: user unknown: USER=%s", user);
     case PAM_MAXTRIES:			OOPS("PAM_MAXTRIES: max retries exceeded");
     case PAM_AUTHINFO_UNAVAIL:		OOPS("PAM_AUTHINFO_UNAVAIL: authentication information unavailable");
-
+    case PAM_BAD_ITEM:			OOPS("unknown item passed to pam_*_item(), probably not supported security module", lib);
     case PAM_SESSION_ERR:		/* I really do not know why this comes	*/
       state	= "err";
       ok	= 0;
@@ -232,9 +238,10 @@ main(int argc, const char **argv)
   int		args;
 
   args = 2;
-  if (argc>2 && argv[2][0] && strcmp(argv[2], "-"))
+  if (argc>2)
     {
-      lib	= argv[2];
+      if (issetarg(argv[2]))
+        lib	= argv[2];
       args	= 3;
     }
 
@@ -243,8 +250,8 @@ main(int argc, const char **argv)
 #if 0
          "\tIf TOKEN is - it reads tokens from stdin.\n"
 #endif
-         "\tUsed PAM.so = %s"
-         , argv[0], lib);
+         "\tThis calls %s() in\n\t%s\n\twith the given args"
+         , argv[0], sym, lib);
 
   dlerror();
 
