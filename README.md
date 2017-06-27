@@ -29,7 +29,7 @@ Verify OATH from shell level by calling `libpam-google-authenticator` PAM module
     - HOTP is not supported.
 
 This here is a wrapper to call `/lib/security/pam_google_authenticator.so` from shell level.
-Actually you can call any PAM security module this way.
+Actually you can call each PAM security module this way.
 
 
 ## Usage
@@ -47,5 +47,5 @@ To use another PAM security module:
 
     /usr/local/bin/google-auth "$PASSWORD" /lib/x86_64-linux-gnu/security/pam_unix.so
 
-etc.
+etc. (actually this example fails, because there is something missing I do not know).
 
