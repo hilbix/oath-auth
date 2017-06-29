@@ -3,7 +3,7 @@
 TARG=google-auth
 CFLAGS=-Wall -O3 -g
 LDLIBS=-ldl -lpam
-PREFIX=$(HOME)
+PREFIX=/usr/local
 TESTARGS="`read KEY < "$$HOME/.google_authenticator" && oathtool -b --totp "$$KEY"`"
 
 .PHONY: all install clean distclean gdb strace ltrace latrace

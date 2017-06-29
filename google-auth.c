@@ -199,7 +199,11 @@ run(const char *pw, int argc, const char **argv)
   appdata.use	= 0;
 
   errno		= 0;
+#if 1
   flags		= PAM_SILENT;
+#else
+  flags		= 0;
+#endif
 
   pamok(pam_start("google-auth", user, &pamconv, &pam), "initializing PAM");
   err		= (*fn)(pam, flags, argc, argv);
@@ -212,7 +216,7 @@ run(const char *pw, int argc, const char **argv)
     case PAM_USER_UNKNOWN:		OOPS("PAM_USER_UNKNOWN: user unknown: USER=%s", user);
     case PAM_MAXTRIES:			OOPS("PAM_MAXTRIES: max retries exceeded");
     case PAM_AUTHINFO_UNAVAIL:		OOPS("PAM_AUTHINFO_UNAVAIL: authentication information unavailable");
-    case PAM_BAD_ITEM:			OOPS("unknown item passed to pam_*_item(), probably not supported security module", lib);
+    case PAM_BAD_ITEM:			OOPS("PAM_BAD_ITEM: unknown item passed to pam_*_item(), probably not supported security module", lib);
     case PAM_SESSION_ERR:		/* I really do not know why this comes	*/
       state	= "err";
       ok	= 0;
