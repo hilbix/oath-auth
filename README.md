@@ -34,8 +34,10 @@ Actually you can call each PAM security module this way.
 
 ## Usage
 
+    sudo apt-get install build-essential libpam0g-dev    # for example: Debian 8.9
+
     git clone https://github.com/hilbix/google-auth.git
-    cd google-auth.git
+    cd google-auth
     make
     sudo make install
 
