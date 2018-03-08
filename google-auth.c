@@ -13,7 +13,7 @@
 
 static int		have;
 static int		ok;
-static const char	*lib = "/lib/security/pam_google_authenticator.so";
+static const char	*lib = GOOGLE_PAM_LIB;
 static const char	*sym = "pam_sm_authenticate";
 
 static const char	* const HEX = "0123456789ABCDEF";
