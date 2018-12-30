@@ -32,4 +32,4 @@ echo "$NOW $IP $2" >> "$AUTHFILE"
 return 0
 }
 
-checkauth "${1:-3600}" "${*:2}" && exec -- ${SSH_ORIGINAL_COMMAND:-"$SHELL"}
+checkauth "${1:-3600}" "${*:2}" && exec -- ${SSH_ORIGINAL_COMMAND:-"$SHELL" -l}
