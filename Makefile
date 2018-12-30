@@ -1,6 +1,7 @@
 #
 
 TARG=google-auth
+SCRIPT=sshlogin.sh
 GOOGLE_PAM_LIB=$(wildcard /lib/security/pam_google_authenticator.so /lib/*/security/pam_google_authenticator.so)
 CFLAGS=-Wall -O3 -g -D'GOOGLE_PAM_LIB="$(GOOGLE_PAM_LIB)"'
 LDLIBS=-ldl -lpam
@@ -28,8 +29,8 @@ latrace:	all
 	latrace -A './$(TARG)' $(TESTARGS)
 
 install:
-	cp '$(TARG)' '$(PREFIX)/bin/$(TARG)'
-	strip -s '$(PREFIX)/bin/$(TARG)'
+	cp $(TARG) $(SCRIPT) '$(PREFIX)/bin/.'
+	for a in $(TARG); do strip -s '$(PREFIX)/bin/'"$$a"; done
 
 clean:	distclean
 
