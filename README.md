@@ -55,6 +55,7 @@ Notes:
 - Caching is good for things like `scp`.  First just do an interactive connection, then you can re-use the key on the copy-script.
 - Caching does not refresh on key-usage.  This is a security feature, so the cache times out, regardless how often it was used.
 - `sshlogin.sh` is not race-condition-free.  In worst case caching just fails.
+- The cache is at `~/.ssh/sshlogin.tmp`.  It is small, but grow-only as long as there are non-expired entries in it.
 
 
 ## Alternatives
