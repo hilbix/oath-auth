@@ -10,26 +10,30 @@ AUTHFILE=.ssh/sshlogin.tmp
 
 checkauth()
 {
-NOW="$(date +%s)"
-IP="${SSH_CONNECTION%% *}"
+local delta="${1:-3600}"
+local info="${*:2}"
+local NOW="$(date +%s)"
+local IP="${SSH_CONNECTION%% *}"
+local stamp ip more diff have auth
+
 [ -f "$AUTHFILE" ] &&
 {
 have=false
 while read -r stamp ip more
 do
 	let diff=NOW-stamp
-	[ $diff -lt "$1" ] || continue
+	[ $diff -lt "$delta" ] || continue
 	have=:
-	[ ".$ip $more" = ".$IP $2" ] && return 0
+	[ ".$ip $more" = ".$IP $info" ] && return 0
 done < "$AUTHFILE"
 $have || rm -f "$AUTHFILE"
 }
 
-read -rp "$(date +%Y%m%d-%H%M%S) auth: " auth || return 1
+read -rp "$(id -un)@$(uname -n) $(date +%Y%m%d-%H%M%S)${info:+ }$info auth: " auth || return 1
 google-auth "$auth" || return 1
 
-echo "$NOW $IP $2" >> "$AUTHFILE"
+echo "$NOW $IP $info" >> "$AUTHFILE"
 return 0
 }
 
-checkauth "${1:-3600}" "${*:2}" && exec -- ${SSH_ORIGINAL_COMMAND:-"$SHELL" -l}
+checkauth "$@" && exec -- ${SSH_ORIGINAL_COMMAND:-"$SHELL" -l}
