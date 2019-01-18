@@ -11,7 +11,7 @@ AUTHFILE=.ssh/sshlogin.tmp
 checkauth()
 {
 local delta="${1:-3600}"
-local info="${2:-$(uname -n)}"
+local info="${*:2}"
 local NOW="$(date +%s)"
 local IP="${SSH_CONNECTION%% *}"
 local stamp ip more diff have auth
@@ -29,11 +29,11 @@ done < "$AUTHFILE"
 $have || rm -f "$AUTHFILE"
 }
 
-read -rp "$(date +%Y%m%d-%H%M%S) $info auth: " auth || return 1
+read -rp "$(id -un)@$(uname -n) $(date +%Y%m%d-%H%M%S)${info:+ }$info auth: " auth || return 1
 google-auth "$auth" || return 1
 
 echo "$NOW $IP $info" >> "$AUTHFILE"
 return 0
 }
 
-checkauth "${1:-3600}" "${*:2}" && exec -- ${SSH_ORIGINAL_COMMAND:-"$SHELL" -l}
+checkauth "$@" && exec -- ${SSH_ORIGINAL_COMMAND:-"$SHELL" -l}
