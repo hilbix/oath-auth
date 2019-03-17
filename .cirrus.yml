@@ -6,5 +6,11 @@ make_task:
   compile_script: make
   install_script: make install
   setup_script: yes | google-authenticator
+
+# I do not know why this is failing on CI
+# (it works at home on several computers)
+test_task:
+  depends_on:
+    - make
   test_script: google-auth "`tail -1 ~/.google_authenticator`"
 
