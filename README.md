@@ -1,4 +1,4 @@
-[![Build Status](https://api.cirrus-ci.com/github/hilbix/google-auth.svg)](https://cirrus-ci.com/github/hilbix/google-auth) [![Test Status](https://api.cirrus-ci.com/github/hilbix/google-auth.svg?task=test)](https://cirrus-ci.com/github/hilbix/google-auth/master)
+[![Build Status](https://api.cirrus-ci.com/github/hilbix/google-auth.svg)](https://cirrus-ci.com/github/hilbix/google-auth) [![Test Status](https://api.cirrus-ci.com/github/hilbix/google-auth.svg?task=test&script=test)](https://cirrus-ci.com/github/hilbix/google-auth/master) (The important one is "Ci".  For unknown reason, "test" fails on CI.)
 
 
 # libpam-google-authenticator compatible shell tool to verify OATH
