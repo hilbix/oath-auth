@@ -2,7 +2,7 @@ container:
   image: gcc:latest
 
 make_task:
-  prep_script: apt-get update; apt-get install libpam-google-authenticator libpam-runtime
+  prep_script: apt-get update; apt-get install libpam-google-authenticator libpam0g-dev
   compile_script: make
   install_script: make install
 
