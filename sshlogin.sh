@@ -36,4 +36,5 @@ echo "$NOW $IP $info" >> "$AUTHFILE"
 return 0
 }
 
-checkauth "$@" && exec -- ${SSH_ORIGINAL_COMMAND:-"$SHELL" -l}
+checkauth "$@" && eval exec -- "${SSH_ORIGINAL_COMMAND:-"$SHELL" -l}"
+
