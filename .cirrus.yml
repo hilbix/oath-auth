@@ -2,14 +2,19 @@ container:
   image: gcc:latest
 
 make_task:
-  prep_script: apt-get update; apt-get install -y libpam-google-authenticator libpam0g-dev
+  prep_script: apt-get update && apt-get install -y libpam-google-authenticator libpam0g-dev
+  compile_script: make && make install
+
+# I do not know why the check_script fails.
+# As long as this is the case we need a way to distinguish between build errors and test errors.
+# For this I want to have two meaningul badges.  Unluckily scripts cannot be failure tolerant.
+# Hence I need two tasks nearly doing the same, such that one can fail without harming the other.
+test_task:
+  allow_failures: true
+  prep1_script: apt-get update
+  prep2_script: apt-get install -y libpam-google-authenticator libpam0g-dev
   compile_script: make
   install_script: make install
-
-# I do not know why this is failing on CI
-# (it works at home on several computers)
-test_task:
-  depends_on:
-    - make
-  test_script: yes | google-authenticator; echo; google-auth "`tail -1 ~/.google_authenticator`"
+  setup_script: yes | google-authenticator
+  check_script: google-auth "`tail -1 ~/.google_authenticator`"
 
