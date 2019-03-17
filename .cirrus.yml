@@ -5,4 +5,6 @@ make_task:
   prep_script: apt-get update; apt-get install -y libpam-google-authenticator libpam0g-dev
   compile_script: make
   install_script: make install
+  setup_script: yes | google-authenticator
+  test_script: google-auth "`tail -1 ~/.google_authenticator`"
 
