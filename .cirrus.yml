@@ -1,5 +1,5 @@
 container:
-  image: gcc:latest
+  image: debian:stable
 
 make_task:
   prep_script: apt-get install libpam-google-authenticator libpam-runtime
