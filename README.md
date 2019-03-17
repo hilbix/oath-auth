@@ -1,3 +1,6 @@
+[![Build Status](https://api.cirrus-ci.com/github/hilbix/google-auth.svg)](https://cirrus-ci.com/github/hilbix/google-auth) [![Test Status](https://api.cirrus-ci.com/github/hilbix/google-auth.svg?task=test)](https://cirrus-ci.com/github/hilbix/google-auth/master)
+
+
 # libpam-google-authenticator compatible shell tool to verify OATH
 
 Verify OATH from shell level by calling `libpam-google-authenticator` PAM module.
