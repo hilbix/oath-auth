@@ -106,7 +106,7 @@ escape(FILE *out, const char *prefix, const char *msg)
     }
 }
 
-struct google_auth_data
+struct oath_auth_data
   {
     const char	*pw;
     int		use;
@@ -115,9 +115,9 @@ struct google_auth_data
 static int
 conv(int n, const struct pam_message **m, struct pam_response **_r, void *app)
 {
-  struct pam_response		*r;
-  struct google_auth_data	*d = app;
-  int				i, ret;
+  struct pam_response	*r;
+  struct oath_auth_data	*d = app;
+  int			i, ret;
 
   r	= calloc(n, sizeof *r);
   if (!r)
@@ -184,7 +184,7 @@ issetarg(const char *s)
   return *s && strcmp(s, "-");
 }
 
-static struct google_auth_data	appdata;
+static struct oath_auth_data	appdata;
 static struct pam_conv		pamconv = { conv, &appdata };
 static int 			(*fn)(pam_handle_t *pamh, int flags, int argc, const char **argv);
 
