@@ -8,6 +8,9 @@
 #include <ctype.h>
 #include <errno.h>
 
+#include <sys/types.h>
+#include <pwd.h>
+
 #include <dlfcn.h>
 #include <security/pam_appl.h>
 
@@ -184,6 +187,26 @@ issetarg(const char *s)
   return *s && strcmp(s, "-");
 }
 
+static const char *
+getuser(const char *env)
+{
+  const char	*u;
+  struct passwd	*pw;
+  uid_t		id;
+
+  u	= getenv(env);
+  if (u)
+    return u;
+
+  id	= geteuid();
+  pw	= getpwuid(id);
+  if (pw && pw->pw_name)
+    return pw->pw_name;
+  OOPS("cannot get user, neither by environent %s nor via getpwuid(%ld)", env, (long)id);
+  return 0;
+}
+
+
 static struct oath_auth_data	appdata;
 static struct pam_conv		pamconv = { conv, &appdata };
 static int 			(*fn)(pam_handle_t *pamh, int flags, int argc, const char **argv);
@@ -192,8 +215,10 @@ static void
 run(const char *pw, int argc, const char **argv)
 {
   int		flags, err;
-  const char	*state, *user = getenv("USER");
+  const char	*state, *user;
   pam_handle_t	*pam;
+
+  user	= getuser("USER");
 
   appdata.pw	= pw;
   appdata.use	= 0;
