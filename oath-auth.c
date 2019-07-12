@@ -205,7 +205,7 @@ run(const char *pw, int argc, const char **argv)
   flags		= 0;
 #endif
 
-  pamok(pam_start("google-auth", user, &pamconv, &pam), "initializing PAM");
+  pamok(pam_start("oath-auth", user, &pamconv, &pam), "initializing PAM");
   err		= (*fn)(pam, flags, argc, argv);
   pamok(pam_end(pam, err), "closing PAM");
 
