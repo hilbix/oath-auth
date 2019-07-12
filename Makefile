@@ -1,6 +1,6 @@
 #
 
-TARG=google-auth
+TARG=oath-auth
 SCRIPT=sshlogin.sh
 GOOGLE_PAM_LIB=$(wildcard /lib/security/pam_google_authenticator.so /lib/*/security/pam_google_authenticator.so)
 CFLAGS=-Wall -O3 -g -D'GOOGLE_PAM_LIB="$(GOOGLE_PAM_LIB)"'
