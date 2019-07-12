@@ -1,7 +1,18 @@
-[![Build Status](https://api.cirrus-ci.com/github/hilbix/google-auth.svg)](https://cirrus-ci.com/github/hilbix/google-auth) [![Test Status](https://api.cirrus-ci.com/github/hilbix/google-auth.svg?task=test&script=test)](https://cirrus-ci.com/github/hilbix/google-auth/master) (The important one is "Ci".  For unknown reason, "test" fails on CI.)
+[![Build Status](https://api.cirrus-ci.com/github/hilbix/oath-auth.svg)](https://cirrus-ci.com/github/hilbix/oath-auth) [![Test Status](https://api.cirrus-ci.com/github/hilbix/oath-auth.svg?task=test&script=test)](https://cirrus-ci.com/github/hilbix/oath-auth/master) (The important one is "Ci".  For unknown reason, "test" fails on CI.)
 
+> **Important!**
+>
+> Be sure to recompile this tool after upgrading your system: `make clean all; sudo make install`
+>
+> `/lib/security/pam_google_authenticator.so` (Debian 8) moved to
+> `/lib/x86_64-linux-gnu/security/pam_google_authenticator.so` (on 64 bit Debian 9)
+> so this tool here fails to load the PAM module and hence always fails until recompiled.
+>
+> If your administrative account is protected by `oath-auth`,
+> be sure to have some fallback login option which works without this here,
+> **else you might get locked out of your machine**!
 
-# libpam-google-authenticator compatible shell tool to verify OATH
+# `libpam-google-authenticator` compatible shell tool to verify OATH
 
 Verify OATH from shell level by calling `libpam-google-authenticator` PAM module.
 
@@ -9,7 +20,7 @@ Verify OATH from shell level by calling `libpam-google-authenticator` PAM module
   - You can install it on Debian with `sudo apt-get install libpam-google-authenticator`
 - However this only installs a commandline tool to setup OATH, but not to use OATH from your shell scripts or other services.
 
-This here is a wrapper to call `/lib/security/pam_google_authenticator.so` from shell level.
+This here is a wrapper to call `/lib/security/pam_google_authenticator.so` (or wherever it hides) from shell level.
 Actually you can call each PAM security module this way.
 
 
@@ -17,8 +28,8 @@ Actually you can call each PAM security module this way.
 
     sudo apt-get install libpam-google-authenticator build-essential libpam0g-dev    # for example: Debian 8.9
 
-    git clone https://github.com/hilbix/google-auth.git
-    cd google-auth
+    git clone https://github.com/hilbix/oath-auth.git
+    cd oath-auth
     make
     sudo make install
 
@@ -28,7 +39,7 @@ To initialize `google-authenticator` (do not forget to scan the QR-Code!):
 
 To check a token:
 
-    /usr/local/bin/google-auth "$TOKEN"
+    /usr/local/bin/oath-auth "$TOKEN"
 
 To use the authenticator for ssh-login in `~/.ssh/authorized_keys` just use it as `command`-argument to `ssh`-public-keys like this:
 
@@ -37,11 +48,11 @@ To use the authenticator for ssh-login in `~/.ssh/authorized_keys` just use it a
 `ssh..` is what usually stands on the line.
 
 
-## Notes on `google-auth`
+## Notes on `oath-auth`
 
 You can try to use another similar PAM security module like in following:
 
-    /usr/local/bin/google-auth "$PASSWORD" /lib/x86_64-linux-gnu/security/pam_unix.so
+    /usr/local/bin/oath-auth "$PASSWORD" /lib/x86_64-linux-gnu/security/pam_unix.so
 
 However this example fails, because there is something missing I do not know.
 
@@ -95,6 +106,16 @@ However:
 
 ## FAQ
 
+Name?
+
+- I formerly called this `google-auth`, which certainly is a better name.
+- But then I realized that I am probably not allowed to use Google's name, even if it is an addon on theirs.
+- Also in future, this here might become independent of Google's solution (see the upgrade warning on the intro).
+- And before you ask:
+  - Google did not request this name change nor contacted me because of this.
+  - I did not rewrite history, so in the previous commits there still is the old name used.
+  - Some other branches might carry this error, too, until I update them.
+
 Why does `sshlogin.sh` print the current time (in ISO format)?
 
 - It is important that both sides, this is the server and your handy, agree to the same time.
@@ -107,7 +128,7 @@ How to use different Tokens for different entries of `authorized_keys`?
 
 Where do the Tokens come from?
 
-- `~/.google-authenticator` is the file in question
+- For now, `~/.google-authenticator` is the file in question
 - It has mode `400` (readonly for user, no access for others) which is important
 - Keep this file secret, as in the first line there is the shared secret, which must not become public.
 - The tokens are calculated from this shared secret and the current time
@@ -115,19 +136,19 @@ Where do the Tokens come from?
 
 `sshlogin.sh` does allow port forwarding without Token
 
-- This is an limitation on `authorized_keys` which cannot be evaded when using `google-auth`.
+- This is an limitation on `.ssh/authorized_keys` which cannot be evaded when using `oath-auth`.
 - If you do not need port forwarding by `ssh`, disable all possibly dangerous things in `authorized_keys`.  Example:
 
         command="/usr/local/bin/sshlogin.sh",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-user-rc ssh-..
 
-- If you need port forwarding depending on a token, do not use this tool here (`google-auth`),
+- If you need port forwarding depending on a token, do not use this tool here (`oath-auth`),
   instead use the normal `pam_google_authenticator`, see `man pam_google_authenticator`
 
 Differences to `pam_google_authenticator`?
 
-- `google-auth` is configured on a per-user ssh-key-level (`$HOME/.ssh/authorized_keys`),
+- `oath-auth` is configured on a per-user ssh-key-level (`$HOME/.ssh/authorized_keys`),
    while `pam_google_authenticator` operates on system-level (`/etc/pam.d/`).
-- `google-auth` uses `pam_google_authenticator`, it neither replaces it nor can overcome limitations of `pam_google_authenticator`.
+- `oath-auth` uses `pam_google_authenticator`, it neither replaces it nor can overcome limitations of `pam_google_authenticator`.
 
 Does it work on other TOTP authenticators?
 
@@ -135,7 +156,7 @@ Does it work on other TOTP authenticators?
 
 Is it secure?
 
-- `google-auth` does not protect against holes in `ssh`, `bash` or `pam_google_authenticator`
+- `oath-auth` does not protect against holes in `ssh`, `bash` or `pam_google_authenticator`
 - TOTP (timebased OTP) are inherently insecure, so do not use them as the only authentication thing.
 - Insecurity comes from the fact, that TOTP uses something I call "public shared secret".
   A "shared secret" (like a password) usually is stored as salted hash, such that it can only be obtained by brute-force in case you do not know it already.
@@ -150,7 +171,7 @@ Why 2FA?
 - This is important, because after a power loss the machine must be able to come up unattended and run cron-jobs before I have a chance to do `ssh-add`.
 - Hence I need some way to protect more important `ssh`-keys in case somebody else gains access to the keys unnoticed.
 - This setup must be very natural and easy to use, else you will start to work around your own security measures.  (This is how humans are.  You cannot evade!)
-- `google-auth` is quite convenient in that sense, nowadays smartphones are ubiquitous.
+- `oath-auth` is quite convenient in that sense, nowadays smartphones are ubiquitous.
 
 Not convenient enough!
 
