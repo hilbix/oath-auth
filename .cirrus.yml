@@ -1,0 +1,20 @@
+container:
+  image: gcc:latest
+
+#make_task:
+#  prep_script: apt-get update && apt-get install -y libpam-google-authenticator libpam0g-dev
+#  compile_script: make && make install
+
+# The test is a bit more detailed and optional.
+# Sadly this cannot be integrated into make_task,
+# as allow_failures is not available on a per-script level.
+test_task:
+  allow_failures: true
+  prep1_script: apt-get update
+  prep2_script: apt-get install -y libpam-google-authenticator libpam0g-dev strace
+  compile_script: make
+  install_script: make install
+  init_script: '{ yes || :; } | google-authenticator'
+  show_script: cat ~/.google_authenticator
+  test_script: strace -vs10000 oath-auth "`tail -1 ~/.google_authenticator`"
+

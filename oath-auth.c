@@ -8,6 +8,9 @@
 #include <ctype.h>
 #include <errno.h>
 
+#include <sys/types.h>
+#include <pwd.h>
+
 #include <dlfcn.h>
 #include <security/pam_appl.h>
 
@@ -106,7 +109,7 @@ escape(FILE *out, const char *prefix, const char *msg)
     }
 }
 
-struct google_auth_data
+struct oath_auth_data
   {
     const char	*pw;
     int		use;
@@ -115,9 +118,9 @@ struct google_auth_data
 static int
 conv(int n, const struct pam_message **m, struct pam_response **_r, void *app)
 {
-  struct pam_response		*r;
-  struct google_auth_data	*d = app;
-  int				i, ret;
+  struct pam_response	*r;
+  struct oath_auth_data	*d = app;
+  int			i, ret;
 
   r	= calloc(n, sizeof *r);
   if (!r)
@@ -184,7 +187,27 @@ issetarg(const char *s)
   return *s && strcmp(s, "-");
 }
 
-static struct google_auth_data	appdata;
+static const char *
+getuser(const char *env)
+{
+  const char	*u;
+  struct passwd	*pw;
+  uid_t		id;
+
+  u	= getenv(env);
+  if (u)
+    return u;
+
+  id	= geteuid();
+  pw	= getpwuid(id);
+  if (pw && pw->pw_name)
+    return pw->pw_name;
+  OOPS("cannot get user, neither by environent %s nor via getpwuid(%ld)", env, (long)id);
+  return 0;
+}
+
+
+static struct oath_auth_data	appdata;
 static struct pam_conv		pamconv = { conv, &appdata };
 static int 			(*fn)(pam_handle_t *pamh, int flags, int argc, const char **argv);
 
@@ -192,8 +215,10 @@ static void
 run(const char *pw, int argc, const char **argv)
 {
   int		flags, err;
-  const char	*state, *user = getenv("USER");
+  const char	*state, *user;
   pam_handle_t	*pam;
+
+  user	= getuser("USER");
 
   appdata.pw	= pw;
   appdata.use	= 0;
@@ -205,7 +230,7 @@ run(const char *pw, int argc, const char **argv)
   flags		= 0;
 #endif
 
-  pamok(pam_start("google-auth", user, &pamconv, &pam), "initializing PAM");
+  pamok(pam_start("oath-auth", user, &pamconv, &pam), "initializing PAM");
   err		= (*fn)(pam, flags, argc, argv);
   pamok(pam_end(pam, err), "closing PAM");
 
