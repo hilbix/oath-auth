@@ -1,9 +1,9 @@
 container:
   image: gcc:latest
 
-make_task:
-  prep_script: apt-get update && apt-get install -y libpam-google-authenticator libpam0g-dev
-  compile_script: make && make install
+#make_task:
+#  prep_script: apt-get update && apt-get install -y libpam-google-authenticator libpam0g-dev
+#  compile_script: make && make install
 
 # I do not know why the test_script fails.
 # As long as this is the case we need a way to distinguish between build errors and test errors.
