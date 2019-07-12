@@ -12,7 +12,7 @@ make_task:
 test_task:
   allow_failures: true
   prep1_script: apt-get update
-  prep2_script: apt-get install -y libpam-google-authenticator libpam0g-dev
+  prep2_script: apt-get install -y libpam-google-authenticator libpam0g-dev strace
   compile_script: make
   install_script: make install
   setup_script: yes | strace google-authenticator
