@@ -16,5 +16,5 @@ test_task:
   compile_script: make
   install_script: make install
   setup_script: '{ yes || :; } | google-authenticator'
-  test_script: cat ~/.google_authenticator; strace -vs10000 oath-auth "`tail -1 ~/.google_authenticator`"
+  test_script: echo USER=$USER; echo LOGNAME=$LOGNAME; cat ~/.google_authenticator; strace -vs10000 oath-auth "`tail -1 ~/.google_authenticator`"
 
