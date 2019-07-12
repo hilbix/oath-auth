@@ -15,6 +15,6 @@ test_task:
   prep2_script: apt-get install -y libpam-google-authenticator libpam0g-dev strace
   compile_script: make
   install_script: make install
-  setup_script: { yes; :; } | google-authenticator
+  setup_script: '{ yes; :; } | google-authenticator'
   test_script: google-auth "`tail -1 ~/.google_authenticator`"
 
