@@ -30,7 +30,7 @@ $have || rm -f "$AUTHFILE"
 }
 
 read -rp "$(id -un)@$(uname -n) $(date +%Y%m%d-%H%M%S)${info:+ }$info auth: " auth || return 1
-google-auth "$auth" || return 1
+oath-auth "$auth" || return 1
 
 echo "$NOW $IP $info" >> "$AUTHFILE"
 return 0
