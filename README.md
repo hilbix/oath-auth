@@ -1,4 +1,4 @@
-[![Build Status](https://api.cirrus-ci.com/github/hilbix/oath-auth.svg)](https://cirrus-ci.com/github/hilbix/oath-auth) [![Test Status](https://api.cirrus-ci.com/github/hilbix/oath-auth.svg?task=test&script=test)](https://cirrus-ci.com/github/hilbix/oath-auth/master) (The important one is "Ci".  For unknown reason, "test" fails on CI.)
+[![Build Status](https://api.cirrus-ci.com/github/hilbix/oath-auth.svg)](https://cirrus-ci.com/github/hilbix/oath-auth) [![Test Status](https://api.cirrus-ci.com/github/hilbix/oath-auth.svg?task=test&script=test)](https://cirrus-ci.com/github/hilbix/oath-auth/master)
 
 > **Important!**
 >

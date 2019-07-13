@@ -1,14 +1,17 @@
 container:
   image: gcc:latest
 
-#make_task:
-#  prep_script: apt-get update && apt-get install -y libpam-google-authenticator libpam0g-dev
-#  compile_script: make && make install
+make_task:
+  only_if: $CIRRUS_BRANCH == 'master'
+  timeout_in: 2m
+  prep_script: apt-get update && apt-get install -y libpam-google-authenticator libpam0g-dev
+  compile_script: make && make install
 
 # The test is a bit more detailed and optional.
 # Sadly this cannot be integrated into make_task,
 # as allow_failures is not available on a per-script level.
 test_task:
+  timeout_in: 2m
   allow_failures: true
   prep1_script: apt-get update
   prep2_script: apt-get install -y libpam-google-authenticator libpam0g-dev strace
