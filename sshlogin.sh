@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Put this in ~/.ssh/authorized_keys like
-#	command=".../sshlogin.sh 3600 [INFO]",no-X11-forwarding KEY description
+#	restrict,pty,command="sshlogin.sh 3600 [INFO]" KEY description
 # the number is the seconds to cache an authentication by the given IP.
 # Default is 3600, use 0 for no caching
 # Caching is done by IP.  Use INFO to cache separated keys from the same IP
