@@ -35,7 +35,7 @@ Actually you can call each PAM security module this way.
 
 To initialize `google-authenticator` (do not forget to scan the QR-Code!):
 
-	yes | google-authenticator
+	yes $'y\n-1' | google-authenticator
 
 To check a token:
 
